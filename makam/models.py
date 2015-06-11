@@ -188,17 +188,11 @@ class Instrument(MakamStyle, data.models.Instrument):
 
     objects = InstrumentManager()
 
-class UnaccentManager(models.Manager):
-    """ A manager to use postgres' unaccent module to get items
-    with a specified `name` field """
-    def unaccent_get(self, name):
-        return super(UnaccentManager, self).get_queryset().extra(where=["unaccent(lower(name)) = unaccent(lower(%s))"], params=[name]).get()
-
 class MakamAlias(models.Model):
     name = models.CharField(max_length=100)
     makam = models.ForeignKey("Makam", related_name="aliases")
 
-    objects = UnaccentManager()
+    objects = managers.UnaccentManager()
 
     def __unicode__(self):
         return self.name
@@ -232,7 +226,7 @@ class UsulAlias(models.Model):
     name = models.CharField(max_length=100)
     usul = models.ForeignKey("Usul", related_name="aliases")
 
-    objects = UnaccentManager()
+    objects = managers.UnaccentManager()
 
     def __unicode__(self):
         return self.name
@@ -270,7 +264,7 @@ class FormAlias(models.Model):
     name = models.CharField(max_length=100)
     form = models.ForeignKey("Form", related_name="aliases")
 
-    objects = UnaccentManager()
+    objects = managers.UnaccentManager()
 
     def __unicode__(self):
         return self.name

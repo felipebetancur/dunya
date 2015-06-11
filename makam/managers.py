@@ -35,7 +35,14 @@ class CollectionRecordingManager(models.Manager):
             qs = qs.filter(release__collection__mbid__in=ids)
         return qs.filter(release__collection__permission__in=permission)
 
-class MakamFormManager(models.Manager):
+class UnaccentManager(models.Manager):
+    """ A manager to use postgres' unaccent module to get items
+    with a specified `name` field """
+    def unaccent_get(self, name):
+        return super(UnaccentManager, self).get_queryset().extra(where=["unaccent(lower(name)) = unaccent(lower(%s))"], params=[name]).get()
+
+
+class MakamFormManager(UnaccentManager):
     def fuzzy(self, name):
         try:
             return makam.models.Form.objects.get(name__iexact=name)
@@ -46,7 +53,7 @@ class MakamFormManager(models.Manager):
             except makam.models.FormAlias.DoesNotExist:
                 raise e
 
-class MakamUsulManager(models.Manager):
+class MakamUsulManager(UnaccentManager):
     def fuzzy(self, name):
         try:
             return makam.models.Usul.objects.get(name__iexact=name)
@@ -57,7 +64,7 @@ class MakamUsulManager(models.Manager):
             except makam.models.UsulAlias.DoesNotExist:
                 raise e
 
-class MakamFuzzyManager(models.Manager):
+class MakamFuzzyManager(UnaccentManager):
     def fuzzy(self, name):
         try:
             return makam.models.Makam.objects.get(name__iexact=name)
@@ -67,5 +74,4 @@ class MakamFuzzyManager(models.Manager):
                 return alias.makam
             except makam.models.MakamAlias.DoesNotExist:
                 raise e
-
 
