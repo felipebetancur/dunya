@@ -151,7 +151,7 @@ class CarnaticReleaseImporter(release_importer.ReleaseImporter):
             name = t["name"].lower()
             if compmusic.tags.has_carnatic_form(name):
                 form_tag = compmusic.tags.parse_carnatic_form(name)
-                form = self._get_form(form_tag)
+                form = self._get_form(form_tag[1])
                 if form:
                     return form
         return None

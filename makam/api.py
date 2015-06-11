@@ -96,6 +96,20 @@ def makambyid(request, pk):
     makam = models.Makam.objects.get(pk=pk)
     return redirect('api-makam-makam-detail', makam.uuid, permanent=True)
 
+def fuzzy(request):
+    qmakam = request.GET.get('makam', None)
+    qform = request.GET.get('form', None)
+    qusul = request.GET.get('usul', None)
+    if qmakam:
+        makam = models.Makam.objects.fuzzy(qmakam)
+        return redirect('api-makam-makam-detail', makam.uuid, permanent=True)
+    if qform:
+        form = models.Form.objects.fuzzy(qform)
+        return redirect('api-makam-form-detail', form.uuid, permanent=True)
+    if qusul:
+        usul = models.Usul.objects.fuzzy(qusul)
+        return redirect('api-makam-usul-detail', usul.uuid, permanent=True)
+
 class FormList(generics.ListAPIView):
     queryset = models.Form.objects.all()
     serializer_class = FormInnerSerializer

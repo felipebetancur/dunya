@@ -1,4 +1,4 @@
-# Copyright 2013,2014 Music Technology Group - Universitat Pompeu Fabra
+  # Copyright 2013,2014 Music Technology Group - Universitat Pompeu Fabra
 #
 # This file is part of Dunya
 #
@@ -34,3 +34,38 @@ class CollectionRecordingManager(models.Manager):
             ids = ids.replace(' ','').split(",")
             qs = qs.filter(release__collection__mbid__in=ids)
         return qs.filter(release__collection__permission__in=permission)
+
+class MakamFormManager(models.Manager):
+    def fuzzy(self, name):
+        try:
+            return makam.models.Form.objects.get(name__iexact=name)
+        except makam.models.Form.DoesNotExist as e:
+            try:
+                alias = makam.models.FormAlias.objects.get(name__iexact=name)
+                return alias.form
+            except makam.models.FormAlias.DoesNotExist:
+                raise e
+
+class MakamUsulManager(models.Manager):
+    def fuzzy(self, name):
+        try:
+            return makam.models.Usul.objects.get(name__iexact=name)
+        except makam.models.Usul.DoesNotExist as e:
+            try:
+                alias = makam.models.UsulAlias.objects.get(name__iexact=name)
+                return alias.usul
+            except makam.models.UsulAlias.DoesNotExist:
+                raise e
+
+class MakamFuzzyManager(models.Manager):
+    def fuzzy(self, name):
+        try:
+            return makam.models.Makam.objects.get(name__iexact=name)
+        except makam.models.Makam.DoesNotExist as e:
+            try:
+                alias = makam.models.MakamAlias.objects.get(name__iexact=name)
+                return alias.makam
+            except makam.models.MakamAlias.DoesNotExist:
+                raise e
+
+

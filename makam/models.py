@@ -207,7 +207,7 @@ class Makam(models.Model):
     name = models.CharField(max_length=100)
     uuid = UUIDField(db_index=True, auto=True)
 
-    objects = UnaccentManager()
+    objects = managers.MakamFuzzyManager()
 
     def __unicode__(self):
         return self.name
@@ -241,7 +241,7 @@ class Usul(models.Model):
     name = models.CharField(max_length=100)
     uuid = UUIDField(db_index=True, auto=True)
 
-    objects = UnaccentManager()
+    objects = managers.MakamUsulManager()
 
     def __unicode__(self):
         return self.name
@@ -279,7 +279,7 @@ class Form(models.Model):
     name = models.CharField(max_length=100)
     uuid = UUIDField(db_index=True, auto=True)
 
-    objects = UnaccentManager()
+    objects = managers.MakamFormManager()
 
     def __unicode__(self):
         return self.name
